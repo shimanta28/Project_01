@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 export const createUser = async (req, res) => {
   try {
     // Extract the necessary fields from the request body
-    const { name, email, password, groups } = req.body;
+    const { name, username, email, password, groups } = req.body;
 
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
@@ -21,6 +21,7 @@ export const createUser = async (req, res) => {
     // Create a new user instance
     const newUser = new User({
       name,
+      username,
       email,
       password: hashedPassword,
       groups,
