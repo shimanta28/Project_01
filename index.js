@@ -22,7 +22,10 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:5173", "http://localhost:3001"],
+    origin: [
+      "http://localhost:5173",
+      "https://expense-tracker-for-friends.vercel.app",
+    ],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
