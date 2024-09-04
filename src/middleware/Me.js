@@ -23,4 +23,4 @@ const me = async (req, res) => {
     }
   });
 };
-module.exports = me;
+export default me;
