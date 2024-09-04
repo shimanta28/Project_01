@@ -23,9 +23,9 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use("/api", (req, res) => {
-  res.send("hello");
-});
+// app.use("/api", (req, res) => {
+//   res.send("hello");
+// });
 app.use("/api/users", userRoutes);
 const PORT = process.env.PORT || 6001;
 mongoose
