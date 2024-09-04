@@ -7,6 +7,7 @@ import multer from "multer";
 // import morgan from "morgan";
 import path from "path";
 import userRoutes from "./src/routes/UserRegister.js";
+import { Console, log } from "console";
 dotenv.config();
 const app = express();
 // app.use(helmet());
@@ -21,7 +22,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
+app.use("/api", () => console.log("Hello"));
 app.use("/api/users", userRoutes);
 const PORT = process.env.PORT || 6001;
 mongoose
