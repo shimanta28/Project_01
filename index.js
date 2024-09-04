@@ -31,7 +31,7 @@ app.use(
 // });
 app.use("/api/auth", userRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/verify", userRoutes);
 const PORT = process.env.PORT || 6001;
 mongoose
   .connect(process.env.MONGO_URL)
