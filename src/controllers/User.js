@@ -8,11 +8,17 @@ export const createUser = async (req, res) => {
     const { name, username, email, password, groups } = req.body;
 
     // Check if the user already exists
-    const existingUser = await User.findOne({ email });
+    let existingUser = await User.findOne({ email });
     if (existingUser) {
       return res
         .status(400)
         .json({ message: "User already exists with this email." });
+    }
+    existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ message: "User already exists with this username." });
     }
 
     // Hash the password before saving the user

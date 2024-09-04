@@ -2,7 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "your-secret-key"; // Use a secure secret and store it safely (e.g., in environment variables)
+// const JWT_SECRET = "your-secret-key"; // Use a secure secret and store it safely (e.g., in environment variables)
 
 // Function to sign in a user
 export const signIn = async (req, res) => {
@@ -27,7 +27,7 @@ export const signIn = async (req, res) => {
     // Generate a JWT token for the user
     const token = jwt.sign(
       { userId: user._id, username: user.username, email: user.email }, // Payload data to include in the token
-      JWT_SECRET, // Secret key
+      process.env.JWT_SECRET, // Secret key
       { expiresIn: "1h" } // Token expiration time
     );
     res.cookie("tlog", token, {
