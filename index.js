@@ -8,12 +8,15 @@ import multer from "multer";
 import helmet from "helmet";
 import path from "path";
 import userRoutes from "./src/routes/UserRegister.js";
+
 import { Console, log } from "console";
+import cookieParser from "cookie-parser";
 dotenv.config();
 const app = express();
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 // app.use(morgan("common"));
+app.use(cookieParser());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(
@@ -26,6 +29,7 @@ app.use(
 // app.use("/api", (req, res) => {
 //   res.send("hello");
 // });
+app.use("/api/auth", userRoutes);
 app.use("/api/users", userRoutes);
 const PORT = process.env.PORT || 6001;
 mongoose
