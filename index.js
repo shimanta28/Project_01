@@ -18,11 +18,13 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["http://localhost:5173", "http://localhost:3001"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use("/api", () => console.log("Hello"));
+app.use("/api", (req, res) => {
+  res.send("hello");
+});
 app.use("/api/users", userRoutes);
 const PORT = process.env.PORT || 6001;
 mongoose
