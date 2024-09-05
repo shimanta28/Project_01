@@ -87,5 +87,39 @@ const getUserById = async (req, res) => {
   }
 };
 
+const addFriend = async (req, res) => {
+  const { userId, friendId } = req.body;
+
+  if (!userId || !friendId) {
+    return res
+      .status(400)
+      .json({ error: "User ID and Friend ID are required" });
+  }
+
+  try {
+    // Find the user and add friendId to their friends list
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { friends: friendId } }, // Add friendId to the friends array if not already present
+      { new: true, projection: "friends" } // Return the updated user with only friends field
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Respond with the updated friends list
+    return res.status(200).json({
+      success: true,
+      data: user.friends,
+    });
+  } catch (err) {
+    console.error("Error adding friend:", err);
+    return res
+      .status(500)
+      .json({ error: "An error occurred while adding the friend" });
+  }
+};
+
 // Export multiple functions using named exports
-export { getAllUsers, getUserById };
+export { getAllUsers, getUserById, addFriend };

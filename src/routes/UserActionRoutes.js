@@ -2,6 +2,7 @@ import express from "express";
 import {
   getAllUsers,
   getUserById,
+  addFriend,
 } from "../controllers/UserActionController.js"; // Import multiple functions
 
 const router = express.Router();
@@ -11,5 +12,6 @@ router.post("/users", getAllUsers);
 
 // Route to get a user by ID
 router.get("/users/:userId", getUserById);
+router.post("/add-friend", addFriend);
 
 export default router;

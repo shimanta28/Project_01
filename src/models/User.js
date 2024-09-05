@@ -41,6 +41,12 @@ const userSchema = new Schema({
     required: true,
   },
   groups: [groupSchema], // Array of groups with roles
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to other users
+    },
+  ],
   created_at: {
     type: Date,
     default: Date.now,
