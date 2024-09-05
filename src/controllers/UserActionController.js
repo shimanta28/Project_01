@@ -47,9 +47,13 @@ const getAllUsers = async (req, res) => {
     }
 
     const regex = new RegExp(query, "i");
-    const users = await User.find({
-      $or: [{ username: { $regex: regex } }, { name: { $regex: regex } }],
-    });
+
+    const users = await User.find(
+      {
+        $or: [{ username: { $regex: regex } }, { name: { $regex: regex } }],
+      },
+      "username name"
+    );
 
     res.json(users);
   } catch (err) {
