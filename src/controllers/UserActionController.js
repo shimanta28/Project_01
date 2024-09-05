@@ -93,31 +93,46 @@ const addFriend = async (req, res) => {
   if (!userId || !friendId) {
     return res
       .status(400)
-      .json({ error: "User ID and Friend ID are required" });
+      .json({ message: "User ID and Friend ID are required" });
   }
 
   try {
-    // Find the user and add friendId to their friends list
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { $addToSet: { friends: friendId } }, // Add friendId to the friends array if not already present
-      { new: true, projection: "friends" } // Return the updated user with only friends field
-    );
-
+    // Find the user and check if the friend is already in the friends array
+    const user = await User.findById(userId).exec();
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Respond with the updated friends list
-    return res.status(200).json({
-      success: true,
-      data: user.friends,
+    // Check if the friend already exists in the user's friends array
+    const friendExists = user.friends.some(
+      (friend) => friend.friend_id.toString() === friendId
+    );
+
+    if (friendExists) {
+      return res
+        .status(400)
+        .json({ message: "Friend already exists in the friends list" });
+    }
+
+    // Add the friend to the user's friends array
+    user.friends.push({
+      friend_id: friendId, // If you use only the ID approach
+      name: "Friend Name", // Optionally add other details if you have them
+      username: "Friend Username",
+      email: "Friend Email",
     });
+
+    // Save the updated user document
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Friend added successfully", friends: user.friends });
   } catch (err) {
     console.error("Error adding friend:", err);
     return res
       .status(500)
-      .json({ error: "An error occurred while adding the friend" });
+      .json({ message: "An error occurred while adding the friend" });
   }
 };
 

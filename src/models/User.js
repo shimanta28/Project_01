@@ -15,7 +15,28 @@ const groupSchema = new Schema({
     required: true,
   },
 });
-
+const friendSchema = new Schema(
+  {
+    friend_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to the User collection
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    username: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+  },
+  { _id: false }
+);
 // Define the User schema
 const userSchema = new Schema({
   name: {
@@ -41,12 +62,7 @@ const userSchema = new Schema({
     required: true,
   },
   groups: [groupSchema], // Array of groups with roles
-  friends: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to other users
-    },
-  ],
+  friends: [friendSchema],
   created_at: {
     type: Date,
     default: Date.now,
