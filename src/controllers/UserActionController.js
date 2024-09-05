@@ -99,6 +99,7 @@ const addFriend = async (req, res) => {
   try {
     // Find the user and check if the friend is already in the friends array
     const user = await User.findById(userId).exec();
+    const friend = await User.findById(friendId).exec();
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -117,9 +118,9 @@ const addFriend = async (req, res) => {
     // Add the friend to the user's friends array
     user.friends.push({
       friend_id: friendId, // If you use only the ID approach
-      name: "Friend Name", // Optionally add other details if you have them
-      username: "Friend Username",
-      email: "Friend Email",
+      name: friend.name, // Optionally add other details if you have them
+      username: friend.username,
+      email: friend.email,
     });
 
     // Save the updated user document
