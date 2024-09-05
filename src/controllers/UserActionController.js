@@ -1,30 +1,60 @@
 import User from "../models/User.js";
 
-// Controller to get all users
+// const getAllUsers = async (req, res) => {
+//   const search = req.body; // Get the search string from query parameters
+
+//   try {
+//     // Build query to search users by name or username
+//     const query = search
+//       ? {
+//           $or: [
+//             { username: new RegExp(search, "i") },
+//             { name: new RegExp(search, "i") },
+//           ],
+//         }
+//       : {}; // If no search string, return all users
+
+//     // Fetch users from the database, including only username and name fields
+//     const users = await User.find(query, "username name").exec();
+
+//     // If no users found, send an empty array
+//     if (!users || users.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No users found",
+//       });
+//     }
+
+//     // Respond with the users data
+//     return res.status(200).json({
+//       success: true,
+//       data: users,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Error retrieving users",
+//     });
+//   }
+// };
+
 const getAllUsers = async (req, res) => {
   try {
-    // Fetch all users from the database, including only username and name fields
-    const users = await User.find({}, "username name").exec();
-
-    // If no users found, send an empty array
-    if (!users || users.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No users found",
-      });
+    const { query } = req.body;
+    if (!query) {
+      return res.status(400).json({ error: "Query is required" });
     }
 
-    // Respond with the users data
-    return res.status(200).json({
-      success: true,
-      data: users,
+    const regex = new RegExp(query, "i");
+    const users = await User.find({
+      $or: [{ username: { $regex: regex } }, { name: { $regex: regex } }],
     });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Error retrieving users",
-    });
+
+    res.json(users);
+  } catch (err) {
+    console.error("Error during search:", err);
+    res.status(500).json({ error: "An error occurred during the search" });
   }
 };
 

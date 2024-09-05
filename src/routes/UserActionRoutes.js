@@ -7,7 +7,7 @@ import {
 const router = express.Router();
 
 // Route to get all users
-router.get("/users", getAllUsers);
+router.post("/users", getAllUsers);
 
 // Route to get a user by ID
 router.get("/users/:userId", getUserById);
