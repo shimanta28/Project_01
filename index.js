@@ -8,6 +8,7 @@ import multer from "multer";
 import helmet from "helmet";
 import path from "path";
 import userRoutes from "./src/routes/UserRegister.js";
+import UsersAction from "./src/routes/UserActionRoutes.js";
 
 import { Console, log } from "console";
 import cookieParser from "cookie-parser";
@@ -29,9 +30,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-// app.use("/api", (req, res) => {
-//   res.send("hello");
-// });
+app.use("/api/get", UsersAction);
 app.use("/api/auth", userRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/verify", userRoutes);
@@ -40,9 +39,5 @@ mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-
-    /* ADD DATA ONE TIME */
-    // User.insertMany(users);
-    // Post.insertMany(posts);
   })
   .catch((error) => console.log(`${error} did not connect`));
