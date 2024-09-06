@@ -87,7 +87,7 @@ const getUserById = async (req, res) => {
   }
 };
 
-const addFriend = async (req, res) => {
+const addOrRemoveFriend = async (req, res) => {
   const { userId, friendId } = req.body;
 
   if (!userId || !friendId) {
@@ -97,9 +97,8 @@ const addFriend = async (req, res) => {
   }
 
   try {
-    // Find the user and check if the friend is already in the friends array
+    // Find the user
     const user = await User.findById(userId).exec();
-    const friend = await User.findById(friendId).exec();
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -110,32 +109,45 @@ const addFriend = async (req, res) => {
     );
 
     if (friendExists) {
+      // If the friend exists, remove them from the friends array
+      user.friends = user.friends.filter(
+        (friend) => friend.friend_id.toString() !== friendId
+      );
+      await user.save();
+
+      return res.status(200).json({
+        message: "Friend removed successfully",
+        friends: user.friends,
+      });
+    } else {
+      // If the friend doesn't exist, add them to the friends array
+      // Fetch the friend's details to add to the friends array
+      const friend = await User.findById(friendId).exec();
+      if (!friend) {
+        return res.status(404).json({ message: "Friend not found" });
+      }
+
+      user.friends.push({
+        friend_id: friend._id,
+        name: friend.name,
+        username: friend.username,
+        email: friend.email,
+      });
+
+      // Save the updated user document
+      await user.save();
+
       return res
-        .status(400)
-        .json({ message: "Friend already exists in the friends list" });
+        .status(200)
+        .json({ message: "Friend added successfully", friends: user.friends });
     }
-
-    // Add the friend to the user's friends array
-    user.friends.push({
-      friend_id: friendId, // If you use only the ID approach
-      name: friend.name, // Optionally add other details if you have them
-      username: friend.username,
-      email: friend.email,
-    });
-
-    // Save the updated user document
-    await user.save();
-
-    return res
-      .status(200)
-      .json({ message: "Friend added successfully", friends: user.friends });
   } catch (err) {
-    console.error("Error adding friend:", err);
+    console.error("Error adding/removing friend:", err);
     return res
       .status(500)
-      .json({ message: "An error occurred while adding the friend" });
+      .json({ message: "An error occurred while adding/removing the friend" });
   }
 };
 
 // Export multiple functions using named exports
-export { getAllUsers, getUserById, addFriend };
+export { getAllUsers, getUserById, addOrRemoveFriend };
