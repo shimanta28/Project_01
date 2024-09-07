@@ -9,6 +9,7 @@ import helmet from "helmet";
 import path from "path";
 import userRoutes from "./src/routes/UserRegister.js";
 import UsersAction from "./src/routes/UserActionRoutes.js";
+import groupRoutes from "./routes/groupRoutes.js";
 
 import { Console, log } from "console";
 import cookieParser from "cookie-parser";
@@ -34,6 +35,10 @@ app.use("/api/get", UsersAction);
 app.use("/api/auth", userRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/verify", userRoutes);
+
+// Use the group routes for any requests starting with /api/groups
+app.use("/api/groups", groupRoutes);
+
 const PORT = process.env.PORT || 6001;
 mongoose
   .connect(process.env.MONGO_URL)
