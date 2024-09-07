@@ -1,7 +1,7 @@
 import Group from "../models/Group.js";
 import User from "../models/User.js";
 
-export const createGroupAndUpdateUsers = async (req, res) => {
+const createGroupAndUpdateUser = async (req, res) => {
   const { name, members, _id } = req.body; // `_id` is the ID of the user creating the group (admin)
 
   if (!name || !members || !_id) {
@@ -99,4 +99,4 @@ const getAllGroups = async (req, res) => {
 };
 
 // Export multiple functions using named exports
-export { createGroupAndUpdateUsers, getAllGroups };
+export { createGroupAndUpdateUser, getAllGroups };

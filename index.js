@@ -9,7 +9,7 @@ import helmet from "helmet";
 import path from "path";
 import userRoutes from "./src/routes/UserRegister.js";
 import UsersAction from "./src/routes/UserActionRoutes.js";
-import groupRoutes from "./routes/groupRoutes.js";
+import groupRoutes from "./src/routes/Group.js";
 
 import { Console, log } from "console";
 import cookieParser from "cookie-parser";

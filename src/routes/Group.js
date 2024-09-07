@@ -1,13 +1,13 @@
 import express from "express";
 import {
-  createGroupAndUpdateUsers,
+  createGroupAndUpdateUser,
   getAllGroups,
 } from "../controllers/Groups.js"; // Import the controllers
 
 const router = express.Router();
 
 // Route to create a group
-router.post("/create", createGroupAndUpdateUsers);
+router.post("/create", createGroupAndUpdateUser);
 
 // Route to get all groups
 router.get("/all", getAllGroups);
