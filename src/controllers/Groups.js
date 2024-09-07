@@ -62,7 +62,11 @@ const createGroupAndUpdateUser = async (req, res) => {
     })
       .populate({
         path: "groups.group_id", // Populate the group details in user's groups array
-        select: "-__v ", // Exclude unnecessary fields (like __v and members)
+        populate: {
+          path: "members.user_id", // Populate the user details in the group
+          select: "-password -__v", // Exclude password and version field
+        },
+        select: "-__v -members", // Exclude unnecessary fields (like __v and members)
       })
       .exec();
 

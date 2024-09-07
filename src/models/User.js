@@ -61,7 +61,16 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  groups: [groupSchema], // Array of groups with roles
+  groups: [
+    {
+      group_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Group",
+        required: true,
+      },
+      role: { type: String, enum: ["admin", "member"], required: true },
+    },
+  ], // Array of groups with roles
   friends: [friendSchema],
   created_at: {
     type: Date,

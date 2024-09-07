@@ -3,18 +3,18 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 // Group member schema (sub-schema for group members)
-const groupMemberSchema = new Schema({
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to the User collection for population
-    required: true,
-  },
-  role: {
-    type: String,
-    enum: ["admin", "member"],
-    required: true,
-  },
-});
+// const groupMemberSchema = new Schema({
+//   user_id: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: "User", // Reference to the User collection for population
+//     required: true,
+//   },
+//   role: {
+//     type: String,
+//     enum: ["admin", "member"],
+//     required: true,
+//   },
+// });
 
 // Group schema
 const groupSchema = new Schema({
@@ -28,7 +28,16 @@ const groupSchema = new Schema({
     type: String,
     default: "",
   },
-  members: [groupMemberSchema], // Array of group members with roles
+  members: [
+    {
+      user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      role: { type: String, enum: ["admin", "member"], required: true },
+    },
+  ], // Array of group members with roles
   created_at: {
     type: Date,
     default: Date.now,
