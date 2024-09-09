@@ -48,6 +48,14 @@ const createGroupAndUpdateUser = async (req, res) => {
       ).exec();
     }
 
+    const updatedUsers = await User.findByIdAndUpdate({
+      _id: { $in: groupMembers.map((m) => m.user_id) },
+    })
+      .populate({
+        path: "groups.group_id", // Populate the group details in user's groups array
+        select: "-__v -members ", // Exclude unnecessary fields (like __v and members)
+      })
+      .exec();
     // Populate members with full user details (excluding password)
     const populatedGroup = await Group.findById(newGroup._id)
       .populate({
@@ -57,14 +65,14 @@ const createGroupAndUpdateUser = async (req, res) => {
       .exec();
 
     // Populate the group information in the user's groups array
-    const updatedUsers = await User.find({
-      _id: { $in: groupMembers.map((m) => m.user_id) },
-    })
-      .populate({
-        path: "groups.group_id", // Populate the group details in user's groups array
-        select: "-__v -members ", // Exclude unnecessary fields (like __v and members)
-      })
-      .exec();
+    // const updatedUsers = await User.find({
+    //   _id: { $in: groupMembers.map((m) => m.user_id) },
+    // })
+    //   .populate({
+    //     path: "groups.group_id", // Populate the group details in user's groups array
+    //     select: "-__v -members ", // Exclude unnecessary fields (like __v and members)
+    //   })
+    //   .exec();
 
     return res.status(201).json({
       success: true,

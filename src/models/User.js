@@ -3,18 +3,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 // Define the Group sub-schema
-const groupSchema = new Schema({
-  group_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Group", // Reference to the Group collection
-    required: true,
-  },
-  role: {
-    type: String,
-    enum: ["admin", "member"],
-    required: true,
-  },
-});
+
 const friendSchema = new Schema(
   {
     friend_id: {
