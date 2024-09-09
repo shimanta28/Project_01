@@ -52,7 +52,7 @@ const createGroupAndUpdateUser = async (req, res) => {
     const populatedGroup = await Group.findById(newGroup._id)
       .populate({
         path: "members.user_id", // Populate the user_id field in members array
-        select: "-password -__v", // Exclude password and version field
+        select: "-password -friends -groups -__v", // Exclude password and version field
       })
       .exec();
 
@@ -62,18 +62,14 @@ const createGroupAndUpdateUser = async (req, res) => {
     })
       .populate({
         path: "groups.group_id", // Populate the group details in user's groups array
-        populate: {
-          path: "members.user_id", // Populate the user details in the group
-          select: "-password -__v", // Exclude password and version field
-        },
-        select: "-__v -members", // Exclude unnecessary fields (like __v and members)
+        select: "-__v -members ", // Exclude unnecessary fields (like __v and members)
       })
       .exec();
 
     return res.status(201).json({
       success: true,
       group: populatedGroup,
-      updatedUsers, // Return updated users with populated group details
+      // updatedUsers, // Return updated users with populated group details
     });
   } catch (error) {
     console.error("Error creating group and updating users:", error);
