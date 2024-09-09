@@ -26,7 +26,7 @@ const me = async (req, res) => {
 
       // If the user is found, return the user information
       if (user) {
-        const updatedUser = await User.find({ username: decoded.username })
+        user = await User.find({ username: decoded.username })
           .populate({
             path: "groups.group_id", // Populate the group details in user's groups array
             populate: {
@@ -37,7 +37,7 @@ const me = async (req, res) => {
           .exec();
         return res.status(200).json({
           loggedin: true,
-          user: updatedUser,
+          user: user,
         });
       } else {
         // If no user is found, return a 404 status
