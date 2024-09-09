@@ -26,15 +26,6 @@ const me = async (req, res) => {
 
       // If the user is found, return the user information
       if (user) {
-        user = await User.find({ username: decoded.username })
-          .populate({
-            path: "groups.group_id", // Populate the group details in user's groups array
-            populate: {
-              path: "members.user_id", // Populate the user details in the group members array
-              select: "-password -__v", // Exclude password and version field
-            },
-          })
-          .exec();
         return res.status(200).json({
           loggedin: true,
           user: user,
