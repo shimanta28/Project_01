@@ -48,7 +48,7 @@ const createGroupAndUpdateUser = async (req, res) => {
       ).exec();
     }
 
-    const updatedUsers = await User.findByIdAndUpdate({
+    const updatedUsers = await User.findById({
       _id: { $in: groupMembers.map((m) => m.user_id) },
     })
       .populate({
