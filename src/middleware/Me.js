@@ -22,11 +22,15 @@ const me = async (req, res) => {
       const user = await User.findOne(
         { username: decoded.username },
         "-__v -password" // Exclude the password and other fields from the response
-      ).exec();
+      )
+        .populate({
+          path: "groups.group_id", // Populate group_id with full group details
+          select: "-__v", // Exclude fields you don't want from Group (like __v)
+        })
+        .exec();
 
       // If the user is found, return the user information
       if (user) {
-        await user.populate({ path: "groups.group_id" });
         return res.status(200).json({
           loggedin: true,
           user: user,
