@@ -26,6 +26,10 @@ const me = async (req, res) => {
         .populate({
           path: "groups.group_id", // Populate group_id with full group details
           select: "-__v", // Exclude fields you don't want from Group (like __v)
+          populate: {
+            path: "members.user_id", // Populate the user_id inside members array
+            select: "-__v -password -groups", // Exclude sensitive or unnecessary fields from the User model
+          },
         })
         .exec();
 
