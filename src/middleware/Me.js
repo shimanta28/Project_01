@@ -26,7 +26,7 @@ const me = async (req, res) => {
 
       // If the user is found, return the user information
       if (user) {
-        user.populate({ path: "groups.group_id" });
+        await user.populate({ path: "groups.group_id" }).exec();
         return res.status(200).json({
           loggedin: true,
           user: user,
