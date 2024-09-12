@@ -13,7 +13,7 @@ router.post("/create", createGroupAndUpdateUser);
 // Route to get all groups
 router.get("/all", getAllGroups);
 
-router.get("/:_id", getGroupById);
+router.get("/group/:_id", getGroupById);
 
 // You can add more group-related routes here
 
