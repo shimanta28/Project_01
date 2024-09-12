@@ -79,6 +79,40 @@ const createGroupAndUpdateUser = async (req, res) => {
   }
 };
 
+const getGroupById = async (req, res) => {
+  const { _id } = req.params; // Get group ID from the request parameters
+
+  try {
+    // Find the group by its ID and populate the members with full user details
+    const group = await Group.findById(_id)
+      .populate({
+        path: "members.user_id", // Populate the user_id field in members array
+        select: "-password -__v", // Exclude password and version field
+      })
+      .exec();
+
+    if (!group) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Group not found" });
+    }
+
+    // Return the populated group details
+    return res.status(200).json({
+      success: true,
+      group, // The fully populated group details
+    });
+  } catch (error) {
+    console.error("Error fetching group details:", error);
+    return res
+      .status(500)
+      .json({
+        success: false,
+        message: "An error occurred while fetching the group",
+      });
+  }
+};
+
 // Example of another controller: Get all groups
 const getAllGroups = async (req, res) => {
   try {
@@ -99,4 +133,4 @@ const getAllGroups = async (req, res) => {
 };
 
 // Export multiple functions using named exports
-export { createGroupAndUpdateUser, getAllGroups };
+export { createGroupAndUpdateUser, getAllGroups, getGroupById };
