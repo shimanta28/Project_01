@@ -90,6 +90,14 @@ const getGroupById = async (req, res) => {
         path: "members.user_id", // Populate the user_id field in members array
         select: "-password -__v", // Exclude password and version field
       })
+      .populate({
+        path: "transactions", // Populate the transactions field
+        populate: {
+          path: "user_id", // Populate user_id in the transactions
+          select: "name", // Select the fields you want from the user model
+        },
+        select: "-__v", // Exclude unnecessary fields from the transaction model
+      })
       .exec();
 
     if (!group) {
@@ -179,6 +187,17 @@ const createTransaction = async (req, res) => {
 
     // Save the transaction to the database
     await newTransaction.save();
+
+    await Group.findByIdAndUpdate(
+      group_id,
+      {
+        $addToSet: {
+          // Ensures the transaction ID is added only once
+          transactions: newTransaction._id,
+        },
+      },
+      { new: true } // Return the updated document
+    ).exec();
     const shareWithUserNames = {};
     const userIds = Object.keys(shares);
 
