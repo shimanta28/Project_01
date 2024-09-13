@@ -179,8 +179,30 @@ const createTransaction = async (req, res) => {
 
     // Save the transaction to the database
     await newTransaction.save();
+    const shareWithUserNames = {};
+    const userIds = Object.keys(shares);
 
-    return res.status(201).json({ success: true, transaction: newTransaction });
+    for (const userId of userIds) {
+      const user = await User.findById(userId).select("name");
+      if (user) {
+        shareWithUserNames[user.name] = shares[userId]; // Replace ID with name
+      }
+    }
+
+    // Return response with user names instead of user IDs in the share object
+    return res.status(201).json({
+      success: true,
+      transaction: {
+        _id: newTransaction._id,
+        user_id: newTransaction.user_id,
+        group_id: newTransaction.group_id,
+        description: newTransaction.description,
+        amount: newTransaction.amount,
+        share: shareWithUserNames, // Return the share object with names as keys
+        createdAt: newTransaction.createdAt,
+        updatedAt: newTransaction.updatedAt,
+      },
+    });
   } catch (error) {
     console.error("Error creating transaction:", error);
     return res
