@@ -38,6 +38,12 @@ const groupSchema = new Schema({
       role: { type: String, enum: ["admin", "member"], required: true },
     },
   ], // Array of group members with roles
+  transactions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Transaction", // References the Transaction model
+    },
+  ],
   created_at: {
     type: Date,
     default: Date.now,
