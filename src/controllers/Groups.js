@@ -175,14 +175,22 @@ const createTransaction = async (req, res) => {
         message: "One or more users in shares are not part of the group",
       });
     }
+    const shareWithUserNames = {};
+    const userIds = Object.keys(shares);
 
+    for (const userId of userIds) {
+      const user = await User.findById(userId).select("name");
+      if (user) {
+        shareWithUserNames[user.name] = shares[userId]; // Replace ID with name
+      }
+    }
     // Create a new transaction
     const newTransaction = new Transaction({
       user_id: _id,
       group_id: group_id,
       description: description,
       amount: amount,
-      share: shares,
+      share: shareWithUserNames,
     });
 
     // Save the transaction to the database
@@ -198,15 +206,6 @@ const createTransaction = async (req, res) => {
       },
       { new: true } // Return the updated document
     ).exec();
-    const shareWithUserNames = {};
-    const userIds = Object.keys(shares);
-
-    for (const userId of userIds) {
-      const user = await User.findById(userId).select("name");
-      if (user) {
-        shareWithUserNames[user.name] = shares[userId]; // Replace ID with name
-      }
-    }
 
     // Return response with user names instead of user IDs in the share object
     return res.status(201).json({
